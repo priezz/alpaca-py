@@ -4,8 +4,7 @@ from typing import Iterator
 from alpaca.broker.client import BrokerClient
 import requests_mock
 
-from alpaca.data.historical import StockHistoricalDataClient
-from alpaca.data.historical.crypto import CryptoHistoricalDataClient
+from alpaca.data.historical import StockHistoricalDataClient, NewsHistoricalDataClient, CryptoHistoricalDataClient
 from alpaca.trading.client import TradingClient
 
 
@@ -59,3 +58,8 @@ def crypto_client():
 def raw_crypto_client():
     raw_client = CryptoHistoricalDataClient("key-id", "secret-key", raw_data=True)
     return raw_client
+
+@pytest.fixture
+def news_client():
+    client = NewsHistoricalDataClient("key-id", "secret-key")
+    return client

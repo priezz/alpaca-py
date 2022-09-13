@@ -324,3 +324,22 @@ class CryptoLatestOrderbookRequest(NonEmptyRequest):
     """
 
     symbol_or_symbols: Union[str, List[str]]
+
+# ############################## News ################################# #
+
+class NewsRequest(BaseTimeseriesDataRequest):
+    """
+    This request class is used to submit a request for historical news.
+
+    Attributes:
+        symbol_or_symbols (Union[str, List[str]]): The ticker identifier or list of ticker identifiers.
+        start (Optional[datetime]): The beginning of the time interval for desired data. Timezone naive inputs assumed to be in UTC.
+        end (Optional[datetime]): The end of the time interval for desired data. Defaults to now. Timezone naive inputs assumed to be in UTC.
+        limit (Optional[int]): Upper limit of number of data points to return. Defaults to None.
+        sort (Optional[str]): Sort articles by updated date. Options: DESC, ASC. Defaults to DESC.
+        include_content (Optional[str]): Boolean whether to include content for news articles. Defaults to False.
+        exclude_contentless (Optional[str]): Exclude news articles that do not contain content (just headline and summary). Defaults to False.
+    """
+    sort: str = "DESC"
+    include_content: bool = False
+    exclude_contentlss: bool = False

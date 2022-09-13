@@ -1,3 +1,4 @@
+from collections import defaultdict
 import time
 from abc import ABC
 from typing import Any, List, Optional, Type, Union, Tuple, Iterator
@@ -16,7 +17,8 @@ from alpaca.common.constants import (
 from alpaca import __version__
 from alpaca.common.exceptions import APIError, RetryException
 from alpaca.common.types import RawData, HTTPResult, Credentials
-from .constants import PageItem
+from alpaca.common.utils import format_dataset_response, format_latest_data_response, DataExtensionType, get_data_from_response
+from .constants import DATA_V2_MAX_LIMIT, PageItem
 from .enums import PaginationType, BaseURL
 
 
@@ -196,7 +198,7 @@ class RESTClient(ABC):
             raise APIError(error, http_error)
 
         if response.text != "":
-            return response.json()
+            return response.json(strict=False) # allow control characters, such as: \n & urls
 
     def get(self, path: str, data: Union[dict, str] = None, **kwargs) -> HTTPResult:
         """Performs a single GET request
@@ -349,3 +351,103 @@ class RESTClient(ABC):
             )
 
         return api_key, secret_key, oauth_token
+
+    def _data_get(
+        self,
+        endpoint_data_type: str,
+        api_version: str,
+        symbol_or_symbols: Union[str, List[str]],
+        limit: Optional[int] = None,
+        page_limit: int = DATA_V2_MAX_LIMIT,
+        extension: Optional[DataExtensionType] = None,
+        endpoint_asset_class: Optional[str] = None,
+        **kwargs,
+    ) -> RawData:
+        """Performs Data API GET requests accounting for pagination. Data in responses are limited to the page_limit,
+        which defaults to 10,000 items. If any more data is requested, the data will be paginated.
+
+        Args:
+            endpoint_data_type (str): The data API endpoint path - /bars, /quotes, etc
+            symbol_or_symbols (Union[str, List[str]]): The symbol or list of symbols that we want to query for
+            endpoint_asset_class (str): The data API security type path. Defaults to 'stocks'.
+            api_version (str): Data API version. Defaults to "v2".
+            limit (Optional[int]): The maximum number of items to query. Defaults to None.
+            page_limit (Optional[int]): The maximum number of items returned per page - different from limit.
+                Defaults to DATA_V2_MAX_LIMIT.
+
+        Returns:
+            RawData: Raw Market data from API
+        """
+        # params contains the payload data
+        params = kwargs
+        path = ""
+
+        # stocks, crypto, etc
+        if endpoint_asset_class:
+            path += f"/{endpoint_asset_class}"
+
+        if isinstance(symbol_or_symbols, str):
+            symbol_or_symbols = [symbol_or_symbols]
+
+        params["symbols"] = ",".join(symbol_or_symbols)
+
+        # TODO: Improve this mess if possible
+        if extension == DataExtensionType.LATEST:
+            path += "/latest"
+            path += f"/{endpoint_data_type}"
+        elif extension == DataExtensionType.SNAPSHOT:
+            path += "/snapshots"
+        else:
+            # bars, trades, quotes, etc
+            path += f"/{endpoint_data_type}"
+
+        # data_by_symbol is in format of
+        #    {
+        #       "symbol1": [ "data1", "data2", ... ],
+        #       "symbol2": [ "data1", "data2", ... ],
+        #                ....
+        #    }
+        # using default dict to improve parsing,
+        data_by_symbol = defaultdict(list)
+
+        total_items = 0
+        page_token = None
+
+        while True:
+
+            actual_limit = None
+
+            # adjusts the limit parameter value if it is over the page_limit
+            if limit:
+                # actual_limit is the adjusted total number of items to query per request
+                actual_limit = min(int(limit) - total_items, page_limit)
+                if actual_limit < 1:
+                    break
+
+            params["limit"] = actual_limit
+            params["page_token"] = page_token
+
+            response = self.get(path=path, data=params, api_version=api_version)
+
+            # TODO: Merge parsing if possible
+            if "news" in response:
+                return get_data_from_response(response)
+            elif (
+                extension == DataExtensionType.LATEST
+                or extension == DataExtensionType.SNAPSHOT
+            ):
+                format_latest_data_response(response, data_by_symbol)
+            else:
+                format_dataset_response(response, data_by_symbol)
+
+            # if we've sent a request with a limit, increment count
+            if actual_limit:
+                total_items += actual_limit
+
+            page_token = response.get("next_page_token", None)
+
+            if page_token is None:
+                break
+
+        # users receive Type dict
+        return dict(data_by_symbol)
