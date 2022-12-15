@@ -22,6 +22,7 @@ from alpaca.data.requests import (
     StockLatestQuoteRequest,
     StockSnapshotRequest,
     StockLatestBarRequest,
+    StockAuctionRequest,
 )
 from alpaca.common.constants import DATA_V2_MAX_LIMIT
 

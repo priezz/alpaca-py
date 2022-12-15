@@ -696,55 +696,6 @@ def test_multi_stock_latest_bar(reqmock, stock_client: StockHistoricalDataClient
 
     assert reqmock.called_once
 
-
-def test_stock_auction(reqmock, stock_client: StockHistoricalDataClient):
-
-    symbol = "SPY"
-    reqmock.get(
-        f"https://data.alpaca.markets/v2/stocks/{symbol}/auctions",
-        text="""
-         {
-            "auctions": [
-                {
-                    "d": "2022-11-03",
-                    "o": [
-                        {
-                            "t": "2022-11-03T13:30:00.168482048Z",
-                            "x": "P",
-                            "p": 142.07,
-                            "s": 1,
-                            "c": "Q"
-                        },
-                        {
-                            "t": "2022-11-03T13:30:01.02496823Z",
-                            "x": "Q",
-                            "p": 142,
-                            "s": 1038885,
-                            "c": "O"
-                        },
-                        {
-                            "t": "2022-11-03T13:30:01.036279766Z",
-                            "x": "Q",
-                            "p": 142,
-                            "s": 1038885,
-                            "c": "Q"
-                        }
-                    ],
-                    "c": null
-                }
-            ],
-            "symbol": "AAPL",
-            "next_page_token": null
-        }
-      """,
-    )
-
-    request = StockAuctionRequest(symbol_or_symbols=symbol)
-
-    auctions = stock_client.get_stock_auctions(request)
-
-    assert isinstance(auctions, DailyAuction)
-
 def test_stock_auction(reqmock, stock_client: StockHistoricalDataClient):
 
     symbol = "SPY"
