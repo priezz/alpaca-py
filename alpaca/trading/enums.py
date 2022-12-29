@@ -30,6 +30,7 @@ class ActivityType(str, Enum):
     REORG = "REORG"
     SPIN = "SPIN"
     SPLIT = "SPLIT"
+    TRD = "TRD"
 
     def is_trade_activity(self) -> bool:
         """
