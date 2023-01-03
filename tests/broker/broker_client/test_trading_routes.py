@@ -1,6 +1,8 @@
 import datetime
 from alpaca.broker.client import BrokerClient
+from alpaca.broker.requests import OrderRequest
 from alpaca.common.enums import BaseURL
+from alpaca.trading.enums import OrderSide, OrderType, TimeInForce
 from alpaca.trading.requests import (
     ClosePositionRequest,
     GetPortfolioHistoryRequest,
@@ -519,7 +521,6 @@ def test_submit_order_for_account(reqmock, client: BrokerClient):
 
     order_req = OrderRequest(
         symbol=symbol,
-        qty=0,
         notional=amount_notional,
         side=OrderSide.BUY,
         type=OrderType.MARKET,
