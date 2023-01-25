@@ -96,10 +96,10 @@ class EmploymentStatus(str, Enum):
     see https://alpaca.markets/docs/broker/api-references/accounts/accounts/#employment-status
     """
 
-    UNEMPLOYED = "unemployed"
-    EMPLOYED = "employed"
-    STUDENT = "student"
-    RETIRED = "retired"
+    UNEMPLOYED = "UNEMPLOYED"
+    EMPLOYED = "EMPLOYED"
+    STUDENT = "STUDENT"
+    RETIRED = "RETIRED"
 
 
 class AgreementType(str, Enum):
@@ -223,6 +223,8 @@ class TradeDocumentType(str, Enum):
 
     ACCOUNT_STATEMENT = "account_statement"
     TRADE_CONFIRMATION = "trade_confirmation"
+    TRADE_CONFIRMATION_JSON = "trade_confirmation_json"
+
     TAX_STATEMENT = "tax_statement"
 
     # Legacy Values
