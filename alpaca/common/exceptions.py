@@ -16,6 +16,11 @@ class APIError(Exception):
     def code(self):
         error = json.loads(self._error)
         return error["code"]
+    
+    @property
+    def message(self):
+        error = json.loads(self._error)
+        return error["message"]
 
     @property
     def status_code(self):
