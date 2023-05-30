@@ -1,4 +1,3 @@
-from typing import Optional
 from alpaca.trading.models import Order as BaseOrder
 from typing import Optional
 
