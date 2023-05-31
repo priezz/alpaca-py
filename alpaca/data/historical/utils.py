@@ -97,6 +97,8 @@ def format_dataset_response(
         data_by_symbol[symbol].extend(data)
         if isinstance(data, list)
         else data_by_symbol[symbol].append(data)
+        if data is not None
+        else None
         for symbol, data in response_data.items()
     ]
 
