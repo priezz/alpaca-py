@@ -54,7 +54,7 @@ def test_get_bars(reqmock, stock_client: StockHistoricalDataClient):
         ],
         "symbol": "AAPL",
         "next_page_token": "QUFQTHxEfDIwMjItMDItMDJUMDU6MDA6MDAuMDAwMDAwMDAwWg=="
-    }   
+    }
         """,
     )
     request = StockBarsRequest(
@@ -114,7 +114,7 @@ def test_multisymbol_get_bars(reqmock, stock_client: StockHistoricalDataClient):
             ]
         },
         "next_page_token": null
-    }   
+    }
         """,
     )
 
@@ -176,7 +176,7 @@ def test_get_quotes(reqmock, stock_client: StockHistoricalDataClient):
         ],
         "symbol": "AAPL",
         "next_page_token": "QUFQTHwyMDIyLTAzLTA5VDA5OjAwOjAwLjAwMDA1OTAwMFp8Q0ZEQUU5QTg="
-    }   
+    }
         """,
     )
     request = StockQuotesRequest(symbol_or_symbols=symbol, start=start, limit=limit)
@@ -241,7 +241,7 @@ def test_multisymbol_quotes(reqmock, stock_client: StockHistoricalDataClient):
             ]
         },
         "next_page_token": null
-    }   
+    }
         """,
     )
 
@@ -303,7 +303,7 @@ def test_get_trades(reqmock, stock_client: StockHistoricalDataClient):
         ],
         "symbol": "AAPL",
         "next_page_token": "QUFQTHwyMDIyLTAzLTA5VDA1OjAwOjE2LjkxMDAwMDAwMFp8RHwwOTIyMzM3MjAzNjg1NDc3NTk3Ng=="
-    }  
+    }
         """,
     )
 
@@ -368,7 +368,7 @@ def test_multisymbol_get_trades(reqmock, stock_client: StockHistoricalDataClient
             ]
         },
         "next_page_token": null
-    }   
+    }
         """,
     )
 
@@ -409,7 +409,7 @@ def test_get_latest_trade(reqmock, stock_client: StockHistoricalDataClient):
             "i": 22730,
             "z": "C"
         }
-    } 
+    }
         """,
     )
     request = StockLatestTradeRequest(symbol_or_symbols=symbol, feed=DataFeed.IEX)
@@ -505,7 +505,7 @@ def test_get_latest_quote(reqmock, stock_client: StockHistoricalDataClient):
             ],
             "z": "C"
         }
-    }  
+    }
         """,
     )
 
@@ -590,7 +590,7 @@ def test_get_snapshot(reqmock, stock_client: StockHistoricalDataClient):
             "n": 609067,
             "vw": 159.425082
         }
-    }  
+    }
         """,
     )
 
@@ -696,6 +696,54 @@ def test_multi_stock_latest_bar(reqmock, stock_client: StockHistoricalDataClient
 
     assert reqmock.called_once
 
+
+def test_stock_auction(reqmock, stock_client: StockHistoricalDataClient):
+
+    symbol = "SPY"
+    reqmock.get(
+        f"https://data.alpaca.markets/v2/stocks/{symbol}/auctions",
+        text="""
+         {
+            "auctions": [
+                {
+                    "d": "2022-11-03",
+                    "o": [
+                        {
+                            "t": "2022-11-03T13:30:00.168482048Z",
+                            "x": "P",
+                            "p": 142.07,
+                            "s": 1,
+                            "c": "Q"
+                        },
+                        {
+                            "t": "2022-11-03T13:30:01.02496823Z",
+                            "x": "Q",
+                            "p": 142,
+                            "s": 1038885,
+                            "c": "O"
+                        },
+                        {
+                            "t": "2022-11-03T13:30:01.036279766Z",
+                            "x": "Q",
+                            "p": 142,
+                            "s": 1038885,
+                            "c": "Q"
+                        }
+                    ],
+                    "c": null
+                }
+            ],
+            "symbol": "AAPL",
+            "next_page_token": null
+        }
+      """,
+    )
+
+    request = StockAuctionRequest(symbol_or_symbols=symbol)
+
+    auctions = stock_client.get_stock_auctions(request)
+
+    assert isinstance(auctions, DailyAuction)
 
 def test_stock_auction(reqmock, stock_client: StockHistoricalDataClient):
 
