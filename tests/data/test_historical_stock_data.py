@@ -54,7 +54,7 @@ def test_get_bars(reqmock, stock_client: StockHistoricalDataClient):
         ],
         "symbol": "AAPL",
         "next_page_token": "QUFQTHxEfDIwMjItMDItMDJUMDU6MDA6MDAuMDAwMDAwMDAwWg=="
-    }   
+    }
         """,
     )
     request = StockBarsRequest(
@@ -114,7 +114,7 @@ def test_multisymbol_get_bars(reqmock, stock_client: StockHistoricalDataClient):
             ]
         },
         "next_page_token": null
-    }   
+    }
         """,
     )
 
@@ -176,7 +176,7 @@ def test_get_quotes(reqmock, stock_client: StockHistoricalDataClient):
         ],
         "symbol": "AAPL",
         "next_page_token": "QUFQTHwyMDIyLTAzLTA5VDA5OjAwOjAwLjAwMDA1OTAwMFp8Q0ZEQUU5QTg="
-    }   
+    }
         """,
     )
     request = StockQuotesRequest(symbol_or_symbols=symbol, start=start, limit=limit)
@@ -241,7 +241,7 @@ def test_multisymbol_quotes(reqmock, stock_client: StockHistoricalDataClient):
             ]
         },
         "next_page_token": null
-    }   
+    }
         """,
     )
 
@@ -303,7 +303,7 @@ def test_get_trades(reqmock, stock_client: StockHistoricalDataClient):
         ],
         "symbol": "AAPL",
         "next_page_token": "QUFQTHwyMDIyLTAzLTA5VDA1OjAwOjE2LjkxMDAwMDAwMFp8RHwwOTIyMzM3MjAzNjg1NDc3NTk3Ng=="
-    }  
+    }
         """,
     )
 
@@ -368,7 +368,7 @@ def test_multisymbol_get_trades(reqmock, stock_client: StockHistoricalDataClient
             ]
         },
         "next_page_token": null
-    }   
+    }
         """,
     )
 
@@ -409,7 +409,7 @@ def test_get_latest_trade(reqmock, stock_client: StockHistoricalDataClient):
             "i": 22730,
             "z": "C"
         }
-    } 
+    }
         """,
     )
     request = StockLatestTradeRequest(symbol_or_symbols=symbol, feed=DataFeed.IEX)
@@ -505,7 +505,7 @@ def test_get_latest_quote(reqmock, stock_client: StockHistoricalDataClient):
             ],
             "z": "C"
         }
-    }  
+    }
         """,
     )
 
@@ -590,7 +590,7 @@ def test_get_snapshot(reqmock, stock_client: StockHistoricalDataClient):
             "n": 609067,
             "vw": 159.425082
         }
-    }  
+    }
         """,
     )
 
@@ -695,7 +695,6 @@ def test_multi_stock_latest_bar(reqmock, stock_client: StockHistoricalDataClient
     assert bar.open == 392.18
 
     assert reqmock.called_once
-
 
 def test_stock_auction(reqmock, stock_client: StockHistoricalDataClient):
 
