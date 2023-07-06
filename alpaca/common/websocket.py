@@ -187,6 +187,7 @@ class BaseStream:
         Args:
             msg (Dict): The message from the websocket connection
         """
+        # print(msg)
         msg_type = msg.get("T")
         symbol = msg.get("S")
         if msg_type == "t":
@@ -243,12 +244,15 @@ class BaseStream:
 
     async def _subscribe_all(self) -> None:
         """Subscribes to live data"""
-        msg = defaultdict(list)
+        # msg = defaultdict(list)
+        msg = dict(action="subscribe")
         for k, v in self._handlers.items():
             if k not in ("cancelErrors", "corrections") and v:
                 for s in v.keys():
+                    if msg.get(k) is None:
+                        msg[k] = []
                     msg[k].append(s)
-        msg["action"] = "subscribe"
+        # print(msg)
         bs = msgpack.packb(msg)
         frames = (
             bs[i : i + self._max_frame_size]

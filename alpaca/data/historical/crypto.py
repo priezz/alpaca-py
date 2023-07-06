@@ -63,7 +63,7 @@ class CryptoHistoricalDataClient(RESTClient):
             api_key=api_key,
             secret_key=secret_key,
             oauth_token=oauth_token,
-            api_version="v1beta3",
+            api_version="v1beta1",
             base_url=url_override if url_override is not None else BaseURL.DATA,
             sandbox=False,
             raw_data=raw_data,
@@ -88,7 +88,7 @@ class CryptoHistoricalDataClient(RESTClient):
         raw_bars = self._data_get(
             endpoint_asset_class="crypto",
             endpoint_data_type="bars",
-            api_version="v1beta3",
+            api_version="v1beta1",
             feed=feed,
             **params,
         )
@@ -118,7 +118,7 @@ class CryptoHistoricalDataClient(RESTClient):
         raw_trades = self._data_get(
             endpoint_asset_class="crypto",
             endpoint_data_type="trades",
-            api_version="v1beta3",
+            api_version="v1beta1",
             feed=feed,
             **params,
         )
@@ -146,7 +146,7 @@ class CryptoHistoricalDataClient(RESTClient):
         raw_trades = self._data_get(
             endpoint_asset_class="crypto",
             endpoint_data_type="trades",
-            api_version="v1beta3",
+            api_version="v1beta1",
             extension=DataExtensionType.LATEST,
             feed=feed,
             **params,
@@ -175,7 +175,7 @@ class CryptoHistoricalDataClient(RESTClient):
         raw_quotes = self._data_get(
             endpoint_asset_class="crypto",
             endpoint_data_type="quotes",
-            api_version="v1beta3",
+            api_version="v1beta1",
             extension=DataExtensionType.LATEST,
             feed=feed,
             **params,
@@ -204,7 +204,7 @@ class CryptoHistoricalDataClient(RESTClient):
         raw_bars = self._data_get(
             endpoint_asset_class="crypto",
             endpoint_data_type="bars",
-            api_version="v1beta3",
+            api_version="v1beta1",
             extension=DataExtensionType.LATEST,
             feed=feed,
             **params,
@@ -236,7 +236,7 @@ class CryptoHistoricalDataClient(RESTClient):
         raw_orderbooks = self._data_get(
             endpoint_asset_class="crypto",
             endpoint_data_type="orderbooks",
-            api_version="v1beta3",
+            api_version="v1beta1",
             extension=DataExtensionType.LATEST,
             feed=feed,
             **params,
@@ -266,7 +266,7 @@ class CryptoHistoricalDataClient(RESTClient):
         raw_snapshots = self._data_get(
             endpoint_asset_class="crypto",
             endpoint_data_type="snapshots",
-            api_version="v1beta3",
+            api_version="v1beta1",
             extension=DataExtensionType.SNAPSHOT,
             feed=feed,
             **params,
@@ -312,7 +312,7 @@ class CryptoHistoricalDataClient(RESTClient):
         # stocks, crypto, etc
         path = f"/{endpoint_asset_class}"
 
-        path += f"/{feed}"
+        # path += f"/{feed}"
 
         if isinstance(symbol_or_symbols, str):
             symbol_or_symbols = [symbol_or_symbols]
